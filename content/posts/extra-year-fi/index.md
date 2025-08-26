@@ -77,7 +77,7 @@ If we zoom out to our whole 2m pile: we allow our full invested amount to grow, 
 
 Here is a simple tool where you can play with the SWR (safe withdraw rate) and the size of extra pile, to see how it influences your total amount over time. Could that convince you that you have enough **now** ?
 
-{{< two_piles_tool >}}
+{{< two_piles_tool_v2 >}}
 
 
 A few notes:

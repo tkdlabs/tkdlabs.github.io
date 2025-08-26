@@ -1,0 +1,87 @@
+{{/* Optional: make IDs unique so multiple shortcodes don’t clash */}}
+{{ $id := printf "fire-%d" now.UnixNano }}
+
+<style>
+  #{{ $id }} * { box-sizing: border-box; }
+
+  #{{ $id }} .form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 640px;
+    align-items: center;
+  }
+  #{{ $id }} label { align-self: center; }
+  #{{ $id }} input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px; /* prevents iOS zoom-on-focus */
+  }
+  #{{ $id }} button {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border: 1;
+    border-radius: 10px;
+    background: #111;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  #{{ $id }} #two_piles_output { margin-top: 10px; white-space: pre-line; }
+
+  @media (max-width: 560px) {
+    #{{ $id }} .form { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div id="{{ $id }}">
+  <form class="form" onsubmit="event.preventDefault()">
+    <label for="{{ $id }}-annual_spend">Annual Spend</label>
+    <input id="{{ $id }}-annual_spend" type="number" value="50000" min="0" step="100" inputmode="numeric" />
+
+    <label for="{{ $id }}-swr">Safe Withdrawal Rate (3–4%)</label>
+    <input id="{{ $id }}-swr" type="number" min="1" max="10" step="0.01" value="3.25" inputmode="decimal" />
+
+    <label for="{{ $id }}-investable">Amount invested</label>
+    <input id="{{ $id }}-investable" type="number" value="2000000" min="0" step="1000" inputmode="numeric" />
+  </form>
+
+  <button type="button" id="{{ $id }}-simulate" onClick="do_simulation();">Simulate</button>
+  <div id="two_piles_output" aria-live="polite"></div>
+</div>
+
+<script>
+		function do_simulation() {
+			let output = document.getElementById('two_piles_output');
+			let msg = "";
+			let annual_spend = document.getElementById('{{ $id }}-annual_spend').value;
+			annual_spend = annual_spend.replace(/,/g, '');
+			let swr = document.getElementById('{{ $id }}-swr').value;
+			let fire_number = annual_spend / (swr / 100);
+			fire_number = Math.round(fire_number * 100) / 100;
+			let amount_invested = document.getElementById('{{ $id }}-investable').value;
+			amount_invested = amount_invested.replace(/,/g, '');
+			let f = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+			if (amount_invested < fire_number) {
+				msg = "<br/> You need " + f.format(fire_number) + " (FIRE number) to retire for your provided ";
+				msg += "safe withdrawal rate which is more ";
+				msg += "than you have already invested: " + f.format(amount_invested);
+				msg += ". Increase amount invested to be at ";
+				msg += "least your FIRE number";
+			} else {
+			  let pile = amount_invested - fire_number;
+				msg = "<br/> Your current invested asset value is " + f.format(amount_invested) + " <br/>";
+				msg += "Your FIRE number is " + f.format(fire_number) + " <br/>";
+				msg += "Your free growing pile is " + f.format(pile) + " <br/>";
+				msg += "Given 7% return your free growing pile will double in 10 years. <br/>";
+				msg += "If you retired now... <br/>";
+				msg += "In 10 years, your total invested assets would be: " + f.format(fire_number + 2*pile) + " </br>";
+				msg += "in 20 years, your total invested assets would be: " + f.format(fire_number + 4*pile) + " </br>";
+				msg += "In 30 years, your total invested assets would be: " + f.format(fire_number + 8*pile) + " </br>";
+			}
+			output.innerHTML = msg;
+		}
+</script>
+
