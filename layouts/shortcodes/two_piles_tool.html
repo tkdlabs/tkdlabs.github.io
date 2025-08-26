@@ -1,0 +1,50 @@
+<div id="two_piles_fire_simulator">
+	<script>
+		function do_simulation() {
+			let output = document.getElementById('two_piles_output');
+			let msg = "";
+			let annual_spend = document.getElementById('annual_spend').value;
+			annual_spend = annual_spend.replace(/,/g, '');
+			let swr = document.getElementById('swr').value;
+			let fire_number = annual_spend / (swr / 100);
+			fire_number = Math.round(fire_number * 100) / 100;
+			let amount_invested = document.getElementById('investable').value;
+			amount_invested = amount_invested.replace(/,/g, '');
+			let f = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+			if (amount_invested < fire_number) {
+				msg = "<br/> You need " + f.format(fire_number) + " (FIRE number) to retire for your provided ";
+				msg += "safe withdrawal rate which is more ";
+				msg += "than you have already invested: " + f.format(amount_invested);
+				msg += ". Increase amount invested to be at ";
+				msg += "least your FIRE number";
+			} else {
+			  let pile = amount_invested - fire_number;
+				msg = "<br/> Your current invested asset value is " + f.format(amount_invested) + " <br/>";
+				msg += "Your FIRE number is " + f.format(fire_number) + " <br/>";
+				msg += "Your free growing pile is " + f.format(pile) + " <br/>";
+				msg += "Given 7% return your free growing pile will double in 10 years. <br/>";
+				msg += "If you retired now... <br/>";
+				msg += "In 10 years, your total invested assets would be: " + f.format(fire_number + 2*pile) + " </br>";
+				msg += "in 20 years, your total invested assets would be: " + f.format(fire_number + 4*pile) + " </br>";
+				msg += "In 30 years, your total invested assets would be: " + f.format(fire_number + 8*pile) + " </br>";
+			}
+			output.innerHTML = msg;
+		}
+	</script>
+	<div>
+	<div style="width:35%; float:left">
+	Annual Spend: 
+	</div>
+	<div style="width:65%; float:right"><input id="annual_spend" type="number" value="50000"></input>&nbsp;$</div>
+	<div style="width:35%; float:left">
+	Safe Withdrawal Rate (3-4%)
+	</div>
+	<div style="width: 65%; float:right"><input id="swr" min="1" max="10" type="number" value="3.25"></input>&nbsp; %</div>
+	<div style="width: 35%; float:left">
+	Amount invested:
+	</div>
+	<div style="width: 65%; float:right"><input id="investable" value="2000000"></input>&nbsp; $</div>
+	<button id="simulate" onClick="do_simulation()">Simulate</button>
+	<br/>
+	<div id="two_piles_output"></div>
+</div>
