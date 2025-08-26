@@ -1,6 +1,6 @@
 baseURL = '/'
 languageCode = 'en-us'
-title = 'Test learning about blogging'
+title = 'Tom Dobek'
 theme = 'poison'
 
 [params]
