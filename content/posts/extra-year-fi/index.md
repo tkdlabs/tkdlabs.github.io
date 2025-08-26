@@ -1,7 +1,7 @@
 +++
 date = '2025-08-26T08:51:05-06:00'
 draft = false
-title = 'What extra buffer in FIRE mean'
+title = 'What does an "extra buffer" in FIRE mean?'
 tags = ["finance"]
 +++
 
@@ -9,7 +9,7 @@ tags = ["finance"]
 
 ### Goal
 
-The FIRE number can tell you how much you need to safely retire. A lot people tend to go over that amount to feel 'really safe'. while this intuitively makes sense, it's a little less obvious what it does and how it makes the difference. This article proposes an intuition how to think about that 'extra' and how would it most likely influence your financial outcome.
+The FIRE number can tell you how much you need to safely retire. A lot of people tend to go over that amount to feel 'really safe'. while this intuitively makes sense, it's a little less obvious what it does and how it makes the difference. This article proposes an intuition how to think about that 'extra' and how would it most likely influence your financial outcome.
 
 *Disclaimer: This is not a financial advice, only an educational content. Speak to a financial (fixed fee ideally) advisor before making any financial decisions.*
 
