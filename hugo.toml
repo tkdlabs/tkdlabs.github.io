@@ -1,0 +1,21 @@
+baseURL = '/'
+languageCode = 'en-us'
+title = 'Test learning about blogging'
+theme = 'poison'
+
+[params]
+	brand = "Tom blog"
+	brand_image = "/images/profile.jpeg"
+	dark_mode = true
+	github_url = "https://github.com/teedobey"
+	linkedin_url = "https://www.linkedin.com/in/tomasz-dobek-7115a64/"
+	menu = [
+		{Name = "About", URL = "/about/", HasChildren = false},
+		{Name = "Posts", URL = "/posts/", Pre = "Recent", HasChildren = true, Limit = 5},
+		{Name = "Tags", URL = "/tags/"},
+		]
+
+[taxonomy]
+	series = 'series'
+	tags = 'tags'
+
