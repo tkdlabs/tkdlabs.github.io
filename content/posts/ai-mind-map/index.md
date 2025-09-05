@@ -11,7 +11,7 @@ I'll present how to use Google Notebook.LM and a local media-to-transcript tool 
 
 ## Example
 
-Imagine a ~2h podcast of [Huberman Lab featuring Alex Honnold](https://www.hubermanlab.com/episode/how-to-set-and-achieve-massive-goals-alex-honnold). It would be cool to listen to it, but we don't always have the full 2 hours. I'll show how to use free AI tools to create a tree of logical parts you can expand with auto-generated notes for everything said on each specific topic. You can get it done in 5-6 minutes using your local GPU and Notebook.LM in amazing quality, or in 2-4 minutes using Notebook.LM internal transcription but to slightly worse subjective quality.
+Imagine a ~2h podcast of [Huberman Lab featuring Alex Honnold](https://www.hubermanlab.com/episode/how-to-set-and-achieve-massive-goals-alex-honnold). It would be cool to listen to it, but we don't always have the full 2 hours. I'll show how to use free AI tools to create a tree of logical parts you can expand with auto-generated notes for everything said on each specific topic. You can get it done in 5-6 minutes using your local GPU and Notebook.LM in amazing quality, or in 2-4 minutes using Notebook.LM internal transcription but with worse quality.
 
 ## Required tools
 
@@ -20,7 +20,7 @@ To do this we will only need 2 tools:
   1. [Whisper from OpenAI](https://github.com/openai/whisper). Their GitHub page has extensive installation guide. You'd use it in command line as a tool. In my example, I'm using Ubuntu Linux and Python with a virtual environment. 
   1. [Notebook.LM from Google](https://notebooklm.google.com/).
 
-Ideally your machine has a NVidia GPU. On my own benchmark, GPU performance of transcription software was 12x of CPU.
+Ideally your machine has a NVidia GPU. In my own benchmark, GPU transcription time is about 12x quicker vs. CPU.
 
 ## Step 1 - Transcribe
 
@@ -73,7 +73,7 @@ For me this is my favorite hack where Notebook.LM is a mighty tool that is simpl
 
 ### Transcribe using Notebook.LM.
 
-Notebook.LM supports direct source uploads using MP3 format. Instead of using [Whisper](https://github.com/openai/whisper), you could upload MP3 directly for ingestion.
+Notebook.LM supports MP3 format. Instead of using [Whisper](https://github.com/openai/whisper), you could upload MP3 directly for ingestion.
 For 2 hour audio it took only **2 minutes** to process. That's faster than using my GPU locally (**5 minutes**) and definitely faster than using CPU.
 However, I found that the mind map generated off audio was less concise and had worse overall structure. Notebook.LM seems to extract content better from TXT files.
 
@@ -83,6 +83,10 @@ For example, the audio mind map had The "General Physical Training" -> "Running"
 The "cardio adventure" is completely skipped, plus the notes for each of those leaf nodes look better for TXT upload, but that might be my subjective impression.
 
 The maximum upload size per source to Notebook.LM is 200MB.
+ 
+#### Foreign language content
+
+In another example, I uploaded a Polish podcast mp3 directly to Notebook.LM, vs. uploading the Polish TXT transcript. Notebook.LM summarized it in English, but for mind map when I uploaded MP3, it reverted back to Polish (!) while for TXT, it kept using English (plus the TXT mind map was of higher quality). Something to keep in mind if you upload the content in foreign languages.
 
 ### Speed of transcription. Alternatives for GPU-less setups.
 
@@ -93,7 +97,7 @@ You'd also forgo all additional features that [Whisper](https://github.com/opena
 ### Processing Videos
 
 Whisper is able to use [ffmpeg](https://ffmpeg.org) if present to convert the input file to the audio format it needs.
-If you are relying on Google Notebook.LM for transcription, you can't directly upload the video formats. You should use ffmpeg directly eg.:
+If you are relying on Google Notebook.LM for transcription, you can't directly upload the video formats. You should use ffmpeg directly to convert to MP3 eg.:
 
 ```shell
 $ ffmpeg -i [your-video-file] [your-video-stem].mp3
