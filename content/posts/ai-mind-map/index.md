@@ -1,7 +1,7 @@
 +++
 date = '2025-09-03T20:51:05-06:00'
 draft = false
-title = "Turn long podcasts into structured notes with NotebookLM + Whisper"
+title = "AI: Analyze podcasts with mind maps using NotebookLM + Whisper"
 tags = ["ai"]
 +++
 
