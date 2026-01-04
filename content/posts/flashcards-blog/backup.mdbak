@@ -1,0 +1,100 @@
++++
+date = '2025-12-31'
+draft = false
+title = 'Anki Flashcards - Korean'
+tags = ["projects"]
++++
+
+[Project technical overview](https://tkdlabs.com/projects/korean-flashcards/). 
+[Demo](https://korean.tkdlabs.com).
+
+### Background: Flashcards and spaced repetition
+
+Flashcards are often used for memorization of new content. It's a simple but powerful concept. A flashcard has a question part, which you reveal and try to guess an answer. Then you'd review the answer and grade yourself how well you rendered it. Based on this grade, a spaced repetition algorithm tries to optimally schedule your next repetition of this question: not too far away that you forget it, but not too close so that this knowledge only remains in your short term memory.
+
+It's a surprisingly powerful way to learn a lot of content in a short amount of time. It's especially useful for exams, and language learning. However, you can decompose pretty much any piece of knowledge into a Q/A flashcards.
+
+### AI assisted coding project
+
+I took this as my first project for couple of reasons:
+
+* I was travelling to South Korea for 3 weeks and wanted to learn about their alphabet, and then language.
+* I have implemented some building blocks for local AI inference already on my sabbatical in the summer.
+* I wanted to build a complete set of AI inference tools I could use for this workflow and reuse for future ones.
+
+But most of all, I wanted to try out building a full project using AI tools. I picked Claude Code, and used their Pro subscription ($20 a month).
+
+### Anki and schema
+
+For the spaced repetition software, I picked Anki. It's a well known product now with the advanced FSRS space repetition algorithm, and open architecture.
+
+Anki uses the following schema:
+  * Deck is a collection of your flashcards.
+  * A note is a piece of information in your deck that will be displayed as one or more flashcards.
+  * A card is an instance of note. One note can have many cards. Imagine a Polish<->English note for word 'car', one variant presents a polish word and your goal is to answer English, and the other one English->Polish translation. The content is the same (note) but displayed differently (cards).
+  * Multimedia items: blobs that belong to a collection and can be referenced from notes.
+
+Additionally, as a deck creator you have full control of schema of a note. You need to provide a set of fields that a note should have. And you can create multiple different templates for notes. Additionally you should provide a HTML-like template and CSS to control how your card is displayed.
+
+And here comes the challenge: the templates for notes, are sadly global in your Anki installation, so you need to make sure they don't clash with others. (and even with your earlier versions of collections). More on that later.
+
+### Building the collection
+
+Anki packages decks into (.apkg) distribution files. Essentially this is a zipped SQLite database along with the multimedia blobs.
+When Anki installs your .apkg file, it merges this to its own big database, hence opportunity for conflicts. It's a nice distribution format, but that merging adds a bit of a pain.
+
+For implementation, this was 100% Claude Code effort. It initially used the Ankigen package to write to a .apkg file. Soon enough, due to merging issues, I was not able to eg. see updated CSS styles in my collections (the content was displayed in the old way always). It took some effort and manual debugging to figure out the problem.
+
+However, I used Claude Code again to write lots of tools like dumping the .apkg packages and identifying problems from it. In the end it implemented the whole package editor tool (the AnkiGen can only create collection from scratch, but it doesn't support editing existing one). That added a lot of options of patching the existing deck, updating it visuals, very needed for AI coding cycle.
+
+Overall, coding with AI was extremely fast, but it needed supervision, just like a TL would provide, with code reviews, setting technical direction what to work on next. With that scaffolding, it can build the right thing fast. A good example was the package dump tool. AI was creating very hacky and limited ways to investigate problems that was eating time and tokens. I needed to provide a very clear instruction and defition what ".apkg dump tool" is and must provide. With that built, it was easy to direct it to run a tool to investigate issues, and suddenly most of the tough issues were investigated and fixed quickly and often at first attempt. 
+
+### Workflow: pick the right LLM for the job.
+
+With the tools to create Anki packages, it was now on to building the content. I created a workflow that over time evolved into 4 steps:
+   * Creating the JSON outline of notes. This JSON file is roughly a collection of notes with all the fields populated.
+   * For each JSON note, generate audio pronunciation(s).
+   * For each JSON note, generate images (ended up not using this for Korean flashcards)
+   * Assemble the whole .apkg file.
+
+Each step can be done by a different tool:
+   * Step 1 - Text LLM.
+   * Step 2 - TTS
+   * Step 3 - AI image generator.
+   * Step 4 - AnkiGen and my own package editor.
+
+### Running it in real life: updates
+
+Running the workflow in real life revealed a few weaknesses that were quickly amended with Claude Code.
+
+#### Step 1 - batching and retries
+
+Step 1 - you can't just generate 3000 flashcards with LLM at once :), there seem to be an optimal input/output length for each LLM. Picking the right LLM for this task was interesting:
+  * Local LLM could struggle with it. 80% of time a 20b model would produce something correctly, but dealing with mistakes was tricky. I feel those micro-LLMs need the shortest batches and simplest instructions.
+  * OpenAI tiny models were surprisingly good at it. While gpt-5-nano was sometimes struggling, gpt-5-mini was good for the task all the time. gpt-5-mini and nano are very inexpensive models good at specific tasks.
+
+I feel with the right prompting perhaps gpt-5-nano could be good enough, or even a local LLM. But I hit the value of time issue. It was easier to spend a few cents more to use gpt-5-mini for this problem vs spending a few hours on crafting the ideal prompt for the simpler model.
+
+#### Step 2 - sound generation
+
+Here, I also switched between using OpenAI, Google Cloud TTS and local methods.
+
+Google Cloud TTS was the winner with so many languages supported, it was even good enough with the Cantonese, which you can't find with other providers.
+
+However, Google ecosystem is very convoluted. They have 2 APIs for the same thing: Vertex, Gemini. They support different set of features and authentication. It took some effort to direct Claude Code to use the right tools here, but Claude Code is very quick to produce code, so changing things also went pretty smoothly.
+
+#### Resumability
+
+Over time, and learning that our most popular providers like OpenAI and Google have APIs that are not 100% reliable all time, a resumable/retriable workflow became a very desirable feature.
+
+Adding support for checkpointing the workflow and resuming, opened up new options like replacing a single sound file that was not generated correctly easily.
+
+Again, LLM coding was super powerful here. But it needed a guidance. It won't necessary come up with the best architecture or high level solution. But if you provide one, it will get the most coding work done up to your spec.
+
+### Final Thoughts
+
+I gave Claude Code a try and loved it. It built a lot of building blocks for this project, I'll be using for other LLM integrations.
+
+Overall, the Claude Code productivity blew me away. It chunked out over 50k LOC in last 2 months in Python alone (and also produced 20k LOC of Markdown docs, and 5K LOC of frontend code among others).
+
+I think coding with AI will change what one can build, and how one work on projects. With technical guidance, those tools can do amazing things. I'm especially excited about the tooling and all the support coding these tools allow to build literally in hours. Imagine the 20% project at Google that is helping all the engineers to have this cool unique dev environment, being now open to solopreneurs and small teams due to this extra productivity that AI unlocks.
