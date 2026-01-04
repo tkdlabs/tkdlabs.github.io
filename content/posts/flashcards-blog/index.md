@@ -2,7 +2,7 @@
 date = '2025-12-31'
 draft = false
 title = 'Anki Flashcards - Korean'
-tags = ["projects"]
+tags = ["project-blog"]
 +++
 
 I built a workflow to generate Korean language flashcards using AI—combining Claude Code for development, OpenAI's lightweight models for content generation, and Google Cloud TTS for pronunciation. This post covers the technical journey: what worked, what broke, and what I learned about AI-assisted coding along the way.
