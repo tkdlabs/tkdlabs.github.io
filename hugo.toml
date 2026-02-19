@@ -7,7 +7,7 @@ theme = 'poison'
 	brand = "Tom's blog"
 	brand_image = "/images/profile.jpeg"
 	dark_mode = true
-	github_url = "https://github.com/teedobey"
+	github_url = "https://github.com/tkdlabs"
 	linkedin_url = "https://www.linkedin.com/in/tomasz-dobek-7115a64/"
 	menu = [
 		{Name = "About", URL = "/about/", HasChildren = false},
