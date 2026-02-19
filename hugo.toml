@@ -4,7 +4,7 @@ title = 'Tom Dobek'
 theme = 'poison'
 
 [params]
-	brand = "Tom blog"
+	brand = "Tom's blog"
 	brand_image = "/images/profile.jpeg"
 	dark_mode = true
 	github_url = "https://github.com/teedobey"
