@@ -19,6 +19,7 @@ if (currentTheme == "dark") {
 btn.addEventListener("click", function () {
     document.body.classList.toggle("dark-theme");
     let hasComments = document.getElementById("remark42");
+    let giscusFrame = document.querySelector("iframe.giscus-frame");
     let theme = "light";
 
     if (document.body.classList.contains("dark-theme")) {
@@ -34,6 +35,9 @@ btn.addEventListener("click", function () {
         if (hasComments) {
             window.REMARK42.changeTheme("light");
         }
+    }
+    if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage({ giscus: { setConfig: { theme: theme } } }, 'https://giscus.app');
     }
     localStorage.setItem("theme", theme);
 });
